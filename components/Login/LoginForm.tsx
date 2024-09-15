@@ -1,51 +1,85 @@
-import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {TextInput, Button} from '@react-native-material/core';
-import {color} from '../../constants/Constants';
-import BaseProps from '../../constants/BaseProps';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image, ToastAndroid } from 'react-native';
+import { useLoading } from '../CustomComponents/LoadingContext';
+import { Text, TextInput, Button } from 'react-native-paper';
+import { buttonStyle, color, labelStyle, textInputStyle } from '../../constants/Styles';
+import { callApi } from '../../utils/Api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ApiUrl, StorageStr } from '../../constants/Constants';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../config/RouteConfig';
 
-interface LoginFormProps extends BaseProps {}
+type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
+interface LoginProps {
+  navigation: LoginScreenNavigationProp;
+}
 
-const LoginForm: React.FC<LoginFormProps> = (props) => {
+const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
   const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
 
-  const onLoginPress = () => {
-    props.showLoading();
-    setTimeout(() => {
-      // Replace this with your actual login logic
-      console.log('Email:', account);
-      console.log('Password:', password);
+  const { showLoading, hideLoading } = useLoading();
 
-      // After login is done, set loading to false
-      props.hideLoading();
-    }, 3000);
+  const onLoginPress = async () => {
+    try {
+      showLoading();
+      let data = { _id: account, Password: password };
+      let response = await callApi(ApiUrl.Login, data);
+      await AsyncStorage.setItem(StorageStr.LoginInfo, JSON.stringify(data));
+      await AsyncStorage.setItem(StorageStr.Account, JSON.stringify(response.value));
+
+      let criteriaResponse = await callApi(ApiUrl.Criteria, {});
+      let lstCriteria = Object.entries(criteriaResponse.value).map(([code, label]) => ({ code, label }));
+      await AsyncStorage.setItem(StorageStr.Criteria, JSON.stringify(lstCriteria));
+      hideLoading();
+
+      navigation.navigate('Waiting');
+    }
+    catch (ex: any) {
+      hideLoading();
+      ToastAndroid.show(ex + '', ToastAndroid.SHORT);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        variant="outlined"
-        label="Tài khoản"
-        style={styles.input}
-        value={account}
-        onChangeText={setAccount}
-      />
-      <TextInput
-        variant="outlined"
-        label="Mật khẩu"
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button
-        title="Đăng nhập"
-        onPress={onLoginPress}
-        style={styles.button}
-        color={color.primaryColor}
-      />
-    </View>
+      <View style={styles.inputContainer}>
+        <Image
+          source={require('../../static/img/logo.jpeg')}
+          resizeMode="cover"
+          style={styles.image}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={labelStyle}>Tài khoản</Text>
+        <TextInput
+          mode="outlined"
+          cursorColor={color.primaryColor}
+          style={textInputStyle.input}
+          outlineStyle={textInputStyle.outline}
+          theme={textInputStyle.theme}
+          value={account}
+          onChangeText={setAccount}
+        />
+        <Text style={labelStyle}>Mật khẩu</Text>
+        <TextInput
+          mode="outlined"
+          style={textInputStyle.input}
+          outlineStyle={textInputStyle.outline}
+          theme={textInputStyle.theme}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <Button
+          onPress={onLoginPress}
+          style={styles.button}
+          textColor={color.primaryTextColor}
+        >
+          Đăng nhập
+        </Button>
+      </View>
+    </View >
   );
 };
 
@@ -53,13 +87,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 16,
+    backgroundColor: color.themeColor,
   },
-  input: {
-    margin: 16,
+  inputContainer: {
+    width: '60%',
+    alignSelf: 'center',
+  },
+  image: {
+    width: '100%',
+    height: 175,
+    marginBottom: 3,
   },
   button: {
-    margin: 16,
+    ...buttonStyle.button,
+    marginTop: 10,
   },
 });
 

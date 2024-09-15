@@ -1,39 +1,57 @@
-import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import React, { useEffect } from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import LoadingIndicator from './components/CustomComponents/CircularProgress';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import routes from './constants/RouteConfig';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { LoadingProvider, useLoading } from './components/CustomComponents/LoadingContext';
+import { PaperProvider } from 'react-native-paper';
+import routes from './config/RouteConfig';
+import DeviceInfo from 'react-native-device-info';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StorageStr } from './constants/Constants';
 
 const Stack = createStackNavigator();
 
-const App: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+const AppNavigator: React.FC = () => {
+  const { loading } = useLoading();
 
-  const showLoading = () => {
-    setLoading(true);
+  const getAndroidId = async () => {
+    const id = await DeviceInfo.getAndroidId();
+    await AsyncStorage.setItem(StorageStr.DeviceId, id);
+    console.log(id);
   };
 
-  const hideLoading = () => {
-    setLoading(false);
-  };
+  useEffect(() => {
+    getAndroidId();
+  }, []);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <SafeAreaView style={styles.container}>
-          <LoadingIndicator loading={loading} />
-          {routes.map((route, index) => (
-            <Stack.Screen
-              key={index}
-              name={route.name}
-              component={route.component}
-              initialParams={{showLoading, hideLoading}}
-            />
-          ))}
-        </SafeAreaView>
+    <>
+      <LoadingIndicator loading={loading} />
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+        {routes.map((route, index) => (
+          <Stack.Screen
+            key={index}
+            name={route.name}
+            component={route.component}
+          />
+        ))}
       </Stack.Navigator>
-    </NavigationContainer>
+    </>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <PaperProvider>
+      <LoadingProvider>
+        <NavigationContainer>
+          <SafeAreaView style={styles.container}>
+            <AppNavigator />
+          </SafeAreaView>
+        </NavigationContainer>
+      </LoadingProvider>
+    </PaperProvider>
   );
 };
 

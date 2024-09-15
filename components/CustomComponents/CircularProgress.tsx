@@ -1,18 +1,18 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {ActivityIndicator} from '@react-native-material/core';
-import {color} from '../../constants/Constants';
+import { View, StyleSheet } from 'react-native';
+import { ActivityIndicator } from '@react-native-material/core';
+import { color } from '../../constants/Styles';
 
 interface LoadingIndicatorProps {
   loading: boolean;
 }
 
-const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({loading}) => {
+const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({ loading }) => {
   return (
     <>
       {loading && (
         <View style={styles.overlay}>
-          <ActivityIndicator size="large" color={color.primaryColor} />
+          <ActivityIndicator size="large" color={color.secondaryColor} />
         </View>
       )}
     </>
