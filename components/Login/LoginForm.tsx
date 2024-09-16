@@ -30,12 +30,17 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
       await AsyncStorage.setItem(StorageStr.LoginInfo, JSON.stringify(data));
       await AsyncStorage.setItem(StorageStr.Account, JSON.stringify(response.value));
 
-      let criteriaResponse = await callApi(ApiUrl.Criteria, {});
-      let lstCriteria = Object.entries(criteriaResponse.value).map(([code, label]) => ({ code, label }));
-      await AsyncStorage.setItem(StorageStr.Criteria, JSON.stringify(lstCriteria));
       hideLoading();
 
-      navigation.navigate('Waiting');
+      if (response.value.Role === 'Employee') {
+        let criteriaResponse = await callApi(ApiUrl.Criteria, {});
+        let lstCriteria = Object.entries(criteriaResponse.value).map(([code, label]) => ({ code, label }));
+        await AsyncStorage.setItem(StorageStr.Criteria, JSON.stringify(lstCriteria));
+        navigation.navigate('Waiting');
+      }
+      if (response.value.Role === 'Admin' || response.value.Role === 'Manager') {
+        navigation.navigate('Setting');
+      }
     }
     catch (ex: any) {
       hideLoading();
@@ -62,7 +67,7 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
           theme={textInputStyle.theme}
           value={account}
           onChangeText={setAccount}
-          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="account" size={20} color={color.primaryColor} />} />}
+          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="account" size={20} color={color.secondaryColor} />} />}
         />
         <Text style={labelStyle}>Mật khẩu</Text>
         <TextInput
@@ -73,7 +78,7 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
-          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="key" size={20} color={color.primaryColor} />} />}
+          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="key" size={20} color={color.secondaryColor} />} />}
         />
         <Button
           onPress={onLoginPress}

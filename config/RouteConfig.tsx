@@ -1,5 +1,6 @@
 import LoginForm from '../components/Login/LoginForm';
 import RatingForm from '../components/Rating/RatingForm';
+import SettingForm from '../components/Setting/SettingForm';
 import ThanksForm from '../components/Thanks/ThanksForm';
 import WaitingForm from '../components/Waiting/WaitingForm';
 
@@ -7,6 +8,8 @@ type RootStackParamList = {
   Login: undefined;
   Waiting: undefined;
   Rating: undefined;
+  Thanks: undefined;
+  Setting: undefined;
 };
 
 export const routes = [
@@ -25,6 +28,10 @@ export const routes = [
   {
     name: 'Rating',
     component: RatingForm,
+  },
+  {
+    name: 'Setting',
+    component: SettingForm,
   },
 ];
 

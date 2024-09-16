@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { color } from '../../constants/Styles';
 import { Text } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -11,19 +11,16 @@ interface ThanksProps {
 }
 
 const ThanksForm: React.FC<ThanksProps> = ({ navigation }) => {
-  const handlePress = () => {
-    navigation.navigate('Waiting');
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.navigate('Waiting');
+    }, 5000);
 
+    return () => clearTimeout(timer);
+  }, [navigation]);
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.touchableOpacity}
-        onPress={handlePress}
-        activeOpacity={1} // Prevent color change on tap
-      >
-        <Text variant="displaySmall" style={styles.text}>Trân trọng cảm ơn quý khách!</Text>
-      </TouchableOpacity>
+      <Text variant="displaySmall" style={styles.text}>Trân trọng cảm ơn quý khách!</Text>
     </View>
   );
 };
@@ -31,13 +28,6 @@ const ThanksForm: React.FC<ThanksProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: color.primaryColor,
-  },
-  touchableOpacity: {
-    width: '100%',
-    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: color.primaryColor,

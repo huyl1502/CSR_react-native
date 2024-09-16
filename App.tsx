@@ -18,7 +18,6 @@ const AppNavigator: React.FC = () => {
   const getAndroidId = async () => {
     const id = await DeviceInfo.getAndroidId();
     await AsyncStorage.setItem(StorageStr.DeviceId, id);
-    console.log(id);
   };
 
   useEffect(() => {

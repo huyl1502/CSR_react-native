@@ -4,6 +4,10 @@ import { color } from '../../constants/Styles';
 import { Text } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../config/RouteConfig';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { callApi } from '../../utils/Api';
+import { ApiUrl, StorageStr } from '../../constants/Constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type WaitingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 interface WaitingProps {
@@ -11,7 +15,12 @@ interface WaitingProps {
 }
 
 const WaitingForm: React.FC<WaitingProps> = ({ navigation }) => {
-  const handlePress = () => {
+  const handlePress = async () => {
+    let loginInfoJson = await AsyncStorage.getItem(StorageStr.LoginInfo) ?? '{}';
+    let loginInfo = JSON.parse(loginInfoJson);
+    let data = { _id: loginInfo._id, Password: loginInfo.Password };
+    let response = await callApi(ApiUrl.Login, data);
+    await AsyncStorage.setItem(StorageStr.Account, JSON.stringify(response.value));
     navigation.navigate('Rating');
   };
 
@@ -24,6 +33,11 @@ const WaitingForm: React.FC<WaitingProps> = ({ navigation }) => {
       >
         <Text variant="displaySmall" style={styles.text}>QUÝ KHÁCH VUI LÒNG CHO BIẾT</Text>
         <Text variant="displaySmall" style={styles.text}>MỨC ĐỘ HÀI LÒNG VỀ DỊCH VỤ CỦA CHÚNG TÔI</Text>
+        <MaterialCommunityIcons
+          name="hand-pointing-up"
+          size={70}
+          color={color.themeColor}
+        />
       </TouchableOpacity>
     </View>
   );

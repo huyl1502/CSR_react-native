@@ -3,38 +3,42 @@ const StorageStr = {
     LoginInfo: 'loginInfo',
     DeviceId: 'deviceId',
     Criteria: 'criteria',
+    Department: 'department',
 };
 
 const lstRatingIcon = [
     {
         point: 5,
-        code: 'happy',
+        code: 'emoticon-excited-outline',
         label: 'Rất hài lòng',
     },
     {
         point: 4,
-        code: 'smile',
+        code: 'emoticon-happy-outline',
         label: 'Hài lòng',
     },
     {
         point: 3,
-        code: 'neutral',
+        code: 'emoticon-neutral-outline',
         label: 'Bình thường',
     },
     {
         point: 2,
-        code: 'sad',
+        code: 'emoticon-sad-outline',
         label: 'Không hài lòng',
     },
     {
         point: 1,
-        code: 'crying',
+        code: 'emoticon-cry-outline',
         label: 'Rất không hài lòng',
     },
 ];
 
 const ApiUrl = {
     Login: 'login/check',
+    Logout: 'login/end',
+    Rating: 'rating/add',
+    Setting: 'device/setting',
     Criteria: 'rating/criteria',
 };
 

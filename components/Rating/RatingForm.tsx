@@ -1,17 +1,28 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ToastAndroid } from 'react-native';
 import { Card, Text } from 'react-native-paper';
-import { color, labelStyle } from '../../constants/Styles';
+import { color } from '../../constants/Styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { lstRatingIcon, StorageStr } from '../../constants/Constants';
+import { ApiUrl, StorageStr } from '../../constants/Constants';
 import Account from '../../models/Account';
 import Criteria from '../../models/Criteria';
-import RatingIcon from '../CustomComponents/RatingIcon';
+import RatingComponent from '../CustomComponents/RatingComponent';
+import { useLoading } from '../CustomComponents/LoadingContext';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../config/RouteConfig';
+import { callApi } from '../../utils/Api';
 
-const RatingForm: React.FC = () => {
+type RatingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Rating'>;
+interface RatingProps {
+    navigation: RatingScreenNavigationProp;
+}
+
+const RatingForm: React.FC<RatingProps> = ({ navigation }) => {
     const [account, setAccount] = useState(new Account());
     const [listCriteria, setListCriteria] = useState(Array<Criteria>);
+    const { showLoading, hideLoading } = useLoading();
 
     const getAccount = async () => {
         let accountJson = await AsyncStorage.getItem(StorageStr.Account) ?? '{}';
@@ -21,7 +32,9 @@ const RatingForm: React.FC = () => {
 
     const getListCriteria = async () => {
         let listCriteriaJson = await AsyncStorage.getItem(StorageStr.Criteria) ?? '{}';
-        let listCriteriaData = JSON.parse(listCriteriaJson);
+        let listCriteriaData = JSON.parse(listCriteriaJson).map((cri: any) => {
+            return { ...cri, point: undefined };
+        });
         setListCriteria(listCriteriaData);
     };
 
@@ -30,25 +43,63 @@ const RatingForm: React.FC = () => {
         getListCriteria();
     }, []);
 
+    const allPointsDefined = () => {
+        return listCriteria.every(cri => cri.point !== undefined);
+    };
+
+    const submitRating = async () => {
+        if (listCriteria.length > 0 && allPointsDefined()) {
+            try {
+                showLoading();
+                let dictCriteria: { [key: string]: number } = {};
+                listCriteria.forEach(cri => {
+                    if (cri.point !== undefined) {
+                        dictCriteria[cri.code] = cri.point;
+                    }
+                });
+                let androidId = await AsyncStorage.getItem(StorageStr.DeviceId);
+                let data = { _id: androidId, Rating: dictCriteria };
+                await callApi(ApiUrl.Rating, data);
+                await callApi(ApiUrl.Logout, {});
+                hideLoading();
+                navigation.navigate('Thanks');
+            }
+            catch (ex: any) {
+                hideLoading();
+                ToastAndroid.show(ex + '', ToastAndroid.SHORT);
+            }
+        }
+    };
+
+    const updateCriteriaPoint = (code: string, point: number) => {
+        setListCriteria(prevListCriteria => {
+            return prevListCriteria.map(cri =>
+                cri.code === code ? { ...cri, point } : cri
+            );
+        });
+    };
+
+    useEffect(() => {
+        if (allPointsDefined()) {
+            submitRating();
+        }
+    }, [listCriteria]);
+
     return (
         <View style={styles.container}>
-            <Card style={{ ...styles.card, marginTop: 5 }}>
+            <Card style={{ ...styles.cardHeader, marginTop: 5 }}>
                 <Card.Content>
-                    <Text style={labelStyle} variant="bodyLarge">{`Giao dịch viên: ${account._id} - ${account.Name}`}</Text>
+                    <Text style={styles.headerText} variant="headlineSmall">{`Giao dịch viên: ${account._id} - ${account.Name}`}</Text>
                 </Card.Content>
             </Card>
             <Card style={[styles.card, styles.flexGrow]}>
                 <Card.Content>
                     {
-                        listCriteria.map((cri) => (
-                            <>
-                                <Text style={labelStyle} variant="bodyLarge">{`${cri.label}`}</Text>
-                                {
-                                    lstRatingIcon.map((icon) => (
-                                        <RatingIcon point={icon.point} code={icon.code} label={icon.label} />
-                                    ))
-                                }
-                            </>
+                        listCriteria.map((cri, index) => (
+                            <View key={cri.code}>
+                                <Text style={styles.label} variant="bodyLarge">{`${index + 1}. ${cri.label}`}</Text>
+                                <RatingComponent criteria={cri} updatePoint={updateCriteriaPoint} />
+                            </View>
                         ))
                     }
                 </Card.Content>
@@ -62,6 +113,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: color.themeColor,
     },
+    cardHeader: {
+        marginLeft: 5,
+        marginRight: 5,
+        marginBottom: 5,
+        backgroundColor: color.primaryColor,
+    },
     card: {
         marginLeft: 5,
         marginRight: 5,
@@ -71,20 +128,16 @@ const styles = StyleSheet.create({
     flexGrow: {
         flexGrow: 1,
     },
+    iconContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    label: {
+        color: color.primaryColor,
+    },
     headerText: {
-        color: color.primaryColor,
-        flexWrap: 'wrap',
-    },
-    header: {
-        borderBottomWidth: 2,
-        borderBottomColor: color.primaryColor,
-    },
-    row: {
-        borderBottomWidth: 1,
-        borderBottomColor: color.primaryColor,
-    },
-    cell: {
-        color: color.primaryColor,
+        color: color.themeColor,
     },
 });
 
