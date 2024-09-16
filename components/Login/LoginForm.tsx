@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, ToastAndroid } from 'react-native';
 import { useLoading } from '../CustomComponents/LoadingContext';
@@ -8,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ApiUrl, StorageStr } from '../../constants/Constants';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../config/RouteConfig';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 interface LoginProps {
@@ -60,6 +62,7 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
           theme={textInputStyle.theme}
           value={account}
           onChangeText={setAccount}
+          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="account" size={20} color={color.primaryColor} />} />}
         />
         <Text style={labelStyle}>Mật khẩu</Text>
         <TextInput
@@ -70,6 +73,7 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="key" size={20} color={color.primaryColor} />} />}
         />
         <Button
           onPress={onLoginPress}

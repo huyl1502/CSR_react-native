@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { color } from '../../constants/Styles';
 import { Text } from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface RatingIconProps {
     point: number;
@@ -10,24 +11,20 @@ interface RatingIconProps {
 }
 
 const RatingIcon: React.FC<RatingIconProps> = (props) => {
-    const [isSelected, setIsSelected] = useState(false);
+    //const [isSelected, setIsSelected] = useState(false);
 
     const handlePress = () => {
-        setIsSelected(true);
+        //setIsSelected(true);
     };
 
     return (
         <View style={styles.container}>
-            <Image
-                source={{ uri: isSelected ? `../../static/img/selected${props.code}.png` : `../../static/img/${props.code}.png` }}
-                resizeMode="cover"
-                style={styles.image}
-            />
             <TouchableOpacity
                 style={styles.touchableOpacity}
                 onPress={handlePress}
                 activeOpacity={1} // Prevent color change on tap
             >
+                <MaterialCommunityIcons name="key" size={50} color={color.primaryColor} />
                 <Text variant="bodyMedium" style={styles.text}>{props.label}</Text>
             </TouchableOpacity>
         </View>
