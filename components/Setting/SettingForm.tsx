@@ -1,24 +1,39 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ToastAndroid } from 'react-native';
-import { useLoading } from '../CustomComponents/LoadingContext';
-import { Text, TextInput, Button } from 'react-native-paper';
-import { buttonStyle, color, labelStyle, textInputStyle } from '../../constants/Styles';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, ToastAndroid} from 'react-native';
+import {useLoading} from '../CustomComponents/LoadingContext';
+import {Text, TextInput, Button} from 'react-native-paper';
+import {
+  buttonStyle,
+  color,
+  labelStyle,
+  textInputStyle,
+} from '../../constants/Styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ApiUrl, StorageStr } from '../../constants/Constants';
-import { callApi } from '../../utils/Api';
+import {ApiUrl, StorageStr} from '../../constants/Constants';
+import {callApi} from '../../utils/Api';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../config/RouteConfig';
 
-const SettingForm: React.FC = () => {
+type SettingScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Setting'
+>;
+interface SettingProps {
+  navigation: SettingScreenNavigationProp;
+}
+
+const SettingForm: React.FC<SettingProps> = ({navigation}) => {
   const [deviceId, setDeviceId] = useState('');
   const [departmentCode, setDepartmentCode] = useState('');
   const [departmentName, setDepartmentName] = useState('');
 
-  const { showLoading, hideLoading } = useLoading();
+  const {showLoading, hideLoading} = useLoading();
 
   const setUpForm = async () => {
     let androidId = await AsyncStorage.getItem(StorageStr.DeviceId);
-    let dep = await AsyncStorage.getItem(StorageStr.Department) ?? '{}';
+    let dep = (await AsyncStorage.getItem(StorageStr.Department)) ?? '{}';
     let department = JSON.parse(dep);
     setDepartmentCode(department.Id);
     setDepartmentName(department.Name);
@@ -33,14 +48,16 @@ const SettingForm: React.FC = () => {
     try {
       showLoading();
       let androidId = await AsyncStorage.getItem(StorageStr.DeviceId);
-      let data = { _id: androidId, Department: departmentCode };
-      let response = await callApi(ApiUrl.Setting, data);
+      let data = {_id: androidId, Department: departmentCode};
+      let response = await callApi(ApiUrl.Setting, data, navigation);
       let depName = JSON.parse(JSON.stringify(response.value)).Department;
       setDepartmentName(depName);
-      await AsyncStorage.setItem(StorageStr.Department, JSON.stringify({ Id: departmentCode, Name: depName }));
+      await AsyncStorage.setItem(
+        StorageStr.Department,
+        JSON.stringify({Id: departmentCode, Name: depName}),
+      );
       hideLoading();
-    }
-    catch (ex: any) {
+    } catch (ex: any) {
       hideLoading();
       ToastAndroid.show(ex + '', ToastAndroid.SHORT);
     }
@@ -59,7 +76,17 @@ const SettingForm: React.FC = () => {
           theme={textInputStyle.theme}
           value={deviceId}
           onChangeText={setDeviceId}
-          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="cellphone" size={20} color={color.secondaryColor} />} />}
+          left={
+            <TextInput.Icon
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="cellphone"
+                  size={20}
+                  color={color.secondaryColor}
+                />
+              )}
+            />
+          }
         />
         <Text style={labelStyle}>Mã chi nhánh</Text>
         <TextInput
@@ -70,7 +97,17 @@ const SettingForm: React.FC = () => {
           theme={textInputStyle.theme}
           value={departmentCode}
           onChangeText={setDepartmentCode}
-          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="office-building" size={20} color={color.secondaryColor} />} />}
+          left={
+            <TextInput.Icon
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="office-building"
+                  size={20}
+                  color={color.secondaryColor}
+                />
+              )}
+            />
+          }
         />
         <Text style={labelStyle}>Tên chi nhánh</Text>
         <TextInput
@@ -82,17 +119,26 @@ const SettingForm: React.FC = () => {
           theme={textInputStyle.theme}
           value={departmentName}
           onChangeText={setDepartmentName}
-          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="office-building" size={20} color={color.secondaryColor} />} />}
+          left={
+            <TextInput.Icon
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="office-building"
+                  size={20}
+                  color={color.secondaryColor}
+                />
+              )}
+            />
+          }
         />
         <Button
           onPress={onSettingPress}
           style={styles.button}
-          textColor={color.primaryTextColor}
-        >
+          textColor={color.primaryTextColor}>
           Lưu
         </Button>
       </View>
-    </View >
+    </View>
   );
 };
 

@@ -1,48 +1,71 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState } from 'react';
-import { View, StyleSheet, Image, ToastAndroid } from 'react-native';
-import { useLoading } from '../CustomComponents/LoadingContext';
-import { Text, TextInput, Button } from 'react-native-paper';
-import { buttonStyle, color, labelStyle, textInputStyle } from '../../constants/Styles';
-import { callApi } from '../../utils/Api';
+import React, {useState} from 'react';
+import {View, StyleSheet, Image, ToastAndroid} from 'react-native';
+import {useLoading} from '../CustomComponents/LoadingContext';
+import {Text, TextInput, Button} from 'react-native-paper';
+import {
+  buttonStyle,
+  color,
+  labelStyle,
+  textInputStyle,
+} from '../../constants/Styles';
+import {callApi} from '../../utils/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ApiUrl, StorageStr } from '../../constants/Constants';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../config/RouteConfig';
+import {ApiUrl, StorageStr} from '../../constants/Constants';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../config/RouteConfig';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
+type LoginScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Login'
+>;
 interface LoginProps {
   navigation: LoginScreenNavigationProp;
 }
 
-const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
+const LoginForm: React.FC<LoginProps> = ({navigation}) => {
   const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
 
-  const { showLoading, hideLoading } = useLoading();
+  const {showLoading, hideLoading} = useLoading();
 
   const onLoginPress = async () => {
     try {
       showLoading();
-      let data = { _id: account, Password: password };
-      let response = await callApi(ApiUrl.Login, data);
+      let data = {_id: account, Password: password};
+      let response = await callApi(ApiUrl.Login, data, navigation);
       await AsyncStorage.setItem(StorageStr.LoginInfo, JSON.stringify(data));
-      await AsyncStorage.setItem(StorageStr.Account, JSON.stringify(response.value));
+      await AsyncStorage.setItem(
+        StorageStr.Account,
+        JSON.stringify(response.value),
+      );
 
       hideLoading();
 
       if (response.value.Role === 'Employee') {
-        let criteriaResponse = await callApi(ApiUrl.Criteria, {});
-        let lstCriteria = Object.entries(criteriaResponse.value).map(([code, label]) => ({ code, label }));
-        await AsyncStorage.setItem(StorageStr.Criteria, JSON.stringify(lstCriteria));
+        let dep = (await AsyncStorage.getItem(StorageStr.Department)) ?? '{}';
+        let department = JSON.parse(dep);
+        if (department.Id === undefined) {
+          throw Error('Thiết bị chưa được cấu hình. Vui lòng liên hệ admin!');
+        }
+        let criteriaResponse = await callApi(ApiUrl.Criteria, {}, navigation);
+        let lstCriteria = Object.entries(criteriaResponse.value).map(
+          ([code, label]) => ({code, label}),
+        );
+        await AsyncStorage.setItem(
+          StorageStr.Criteria,
+          JSON.stringify(lstCriteria),
+        );
         navigation.navigate('Waiting');
       }
-      if (response.value.Role === 'Admin' || response.value.Role === 'Manager') {
+      if (
+        response.value.Role === 'Admin' ||
+        response.value.Role === 'Manager'
+      ) {
         navigation.navigate('Setting');
       }
-    }
-    catch (ex: any) {
+    } catch (ex: any) {
       hideLoading();
       ToastAndroid.show(ex + '', ToastAndroid.SHORT);
     }
@@ -67,7 +90,17 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
           theme={textInputStyle.theme}
           value={account}
           onChangeText={setAccount}
-          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="account" size={20} color={color.secondaryColor} />} />}
+          left={
+            <TextInput.Icon
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="account"
+                  size={20}
+                  color={color.secondaryColor}
+                />
+              )}
+            />
+          }
         />
         <Text style={labelStyle}>Mật khẩu</Text>
         <TextInput
@@ -78,17 +111,26 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
-          left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="key" size={20} color={color.secondaryColor} />} />}
+          left={
+            <TextInput.Icon
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="key"
+                  size={20}
+                  color={color.secondaryColor}
+                />
+              )}
+            />
+          }
         />
         <Button
           onPress={onLoginPress}
           style={styles.button}
-          textColor={color.primaryTextColor}
-        >
+          textColor={color.primaryTextColor}>
           Đăng nhập
         </Button>
       </View>
-    </View >
+    </View>
   );
 };
 

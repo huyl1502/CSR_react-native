@@ -59,8 +59,8 @@ const RatingForm: React.FC<RatingProps> = ({ navigation }) => {
                 });
                 let androidId = await AsyncStorage.getItem(StorageStr.DeviceId);
                 let data = { _id: androidId, Rating: dictCriteria };
-                await callApi(ApiUrl.Rating, data);
-                await callApi(ApiUrl.Logout, {});
+                await callApi(ApiUrl.Rating, data, navigation);
+                await callApi(ApiUrl.Logout, {}, navigation);
                 hideLoading();
                 navigation.navigate('Thanks');
             }

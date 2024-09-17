@@ -9,7 +9,7 @@ import { callApi } from '../../utils/Api';
 import { ApiUrl, StorageStr } from '../../constants/Constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type WaitingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
+type WaitingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Waiting'>;
 interface WaitingProps {
   navigation: WaitingScreenNavigationProp;
 }
@@ -19,7 +19,7 @@ const WaitingForm: React.FC<WaitingProps> = ({ navigation }) => {
     let loginInfoJson = await AsyncStorage.getItem(StorageStr.LoginInfo) ?? '{}';
     let loginInfo = JSON.parse(loginInfoJson);
     let data = { _id: loginInfo._id, Password: loginInfo.Password };
-    let response = await callApi(ApiUrl.Login, data);
+    let response = await callApi(ApiUrl.Login, data, navigation);
     await AsyncStorage.setItem(StorageStr.Account, JSON.stringify(response.value));
     navigation.navigate('Rating');
   };

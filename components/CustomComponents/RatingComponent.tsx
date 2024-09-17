@@ -17,10 +17,8 @@ const RatingComponent: React.FC<RatingProps> = (props) => {
             {
                 lstRatingIcon.map((icon) => (
                     <RatingIcon
-                        key={icon.code}
-                        point={icon.point}
-                        code={icon.code}
-                        label={icon.label}
+                        key={`${props.criteria.code}-${icon.code}`}
+                        icon={icon}
                         isSelected={selectedIcon === icon.code}
                         onSelect={() => {
                             props.updatePoint(props.criteria.code, icon.point);

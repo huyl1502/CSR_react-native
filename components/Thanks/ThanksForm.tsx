@@ -5,7 +5,7 @@ import { Text } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../config/RouteConfig';
 
-type ThanksScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
+type ThanksScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Thanks'>;
 interface ThanksProps {
   navigation: ThanksScreenNavigationProp;
 }
