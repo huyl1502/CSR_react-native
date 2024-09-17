@@ -8,19 +8,9 @@ const StorageStr = {
 
 const lstRatingIcon = [
     {
-        point: 5,
-        code: 'emoticon-excited-outline',
-        label: 'Rất hài lòng',
-    },
-    {
-        point: 4,
-        code: 'emoticon-happy-outline',
-        label: 'Hài lòng',
-    },
-    {
-        point: 3,
-        code: 'emoticon-neutral-outline',
-        label: 'Bình thường',
+        point: 1,
+        code: 'emoticon-cry-outline',
+        label: 'Rất không hài lòng',
     },
     {
         point: 2,
@@ -28,9 +18,19 @@ const lstRatingIcon = [
         label: 'Không hài lòng',
     },
     {
-        point: 1,
-        code: 'emoticon-cry-outline',
-        label: 'Rất không hài lòng',
+        point: 3,
+        code: 'emoticon-neutral-outline',
+        label: 'Bình thường',
+    },
+    {
+        point: 4,
+        code: 'emoticon-happy-outline',
+        label: 'Hài lòng',
+    },
+    {
+        point: 5,
+        code: 'emoticon-excited-outline',
+        label: 'Rất hài lòng',
     },
 ];
 
