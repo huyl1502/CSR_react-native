@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ToastAndroid } from 'react-native';
+import { View, StyleSheet, ToastAndroid, Image } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { color } from '../../constants/Styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -87,9 +86,14 @@ const RatingForm: React.FC<RatingProps> = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Card style={{ ...styles.cardHeader, marginTop: 5 }}>
+            <Card style={styles.cardHeader}>
                 <Card.Content>
                     <Text style={styles.headerText} variant="headlineSmall">{`Giao dịch viên: ${account._id} - ${account.Name}`}</Text>
+                    <Image
+                        source={require('../../static/img/arrow.png')}
+                        resizeMode="contain"
+                        style={styles.image}
+                    />
                 </Card.Content>
             </Card>
             <Card style={[styles.card, styles.flexGrow]}>
@@ -111,19 +115,16 @@ const RatingForm: React.FC<RatingProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.themeColor,
+        backgroundColor: color.primaryColor,
     },
     cardHeader: {
-        marginLeft: 5,
-        marginRight: 5,
-        marginBottom: 5,
-        backgroundColor: color.primaryColor,
+        backgroundColor: color.themeColor,
     },
     card: {
         marginLeft: 5,
         marginRight: 5,
         marginBottom: 5,
-        backgroundColor: color.themeColor,
+        backgroundColor: color.primaryColor,
     },
     flexGrow: {
         flexGrow: 1,
@@ -137,7 +138,12 @@ const styles = StyleSheet.create({
         color: color.primaryColor,
     },
     headerText: {
-        color: color.themeColor,
+        color: color.primaryColor,
+    },
+    image: {
+        width: 75,
+        height: 75,
+        marginTop: 10,
     },
 });
 
