@@ -88,7 +88,7 @@ const RatingForm: React.FC<RatingProps> = ({ navigation }) => {
         <View style={styles.container}>
             <Card style={styles.cardHeader}>
                 <Card.Content>
-                    <Text style={styles.headerText} variant="headlineSmall">{`Giao dịch viên: ${account._id} - ${account.Name}`}</Text>
+                    <Text style={styles.headerText} variant="headlineSmall">{`Giao dịch viên: ${account._id} | ${account.Name}`}</Text>
                     <Image
                         source={require('../../static/img/arrow.png')}
                         resizeMode="contain"

@@ -1,19 +1,19 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState } from 'react';
-import { View, StyleSheet, Image, ToastAndroid } from 'react-native';
-import { useLoading } from '../CustomComponents/LoadingContext';
-import { Text, TextInput, Button } from 'react-native-paper';
+import React, {useState} from 'react';
+import {View, StyleSheet, Image, ToastAndroid} from 'react-native';
+import {useLoading} from '../CustomComponents/LoadingContext';
+import {Text, TextInput, Button} from 'react-native-paper';
 import {
   buttonStyle,
   color,
   labelStyle,
   textInputStyle,
 } from '../../constants/Styles';
-import { callApi } from '../../utils/Api';
+import {callApi} from '../../utils/Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ApiUrl, StorageStr } from '../../constants/Constants';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../config/RouteConfig';
+import {ApiUrl, StorageStr} from '../../constants/Constants';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../config/RouteConfig';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type LoginScreenNavigationProp = StackNavigationProp<
@@ -24,16 +24,16 @@ interface LoginProps {
   navigation: LoginScreenNavigationProp;
 }
 
-const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
+const LoginForm: React.FC<LoginProps> = ({navigation}) => {
   const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
 
-  const { showLoading, hideLoading } = useLoading();
+  const {showLoading, hideLoading} = useLoading();
 
   const onLoginPress = async () => {
     try {
       showLoading();
-      let data = { _id: account, Password: password };
+      let data = {_id: account, Password: password};
       let response = await callApi(ApiUrl.Login, data, navigation);
       await AsyncStorage.setItem(StorageStr.LoginInfo, JSON.stringify(data));
       await AsyncStorage.setItem(
@@ -51,7 +51,7 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
         }
         let criteriaResponse = await callApi(ApiUrl.Criteria, {}, navigation);
         let lstCriteria = Object.entries(criteriaResponse.value).map(
-          ([code, label]) => ({ code, label }),
+          ([code, label]) => ({code, label}),
         );
         await AsyncStorage.setItem(
           StorageStr.Criteria,
@@ -59,7 +59,7 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
         );
         navigation.navigate('Waiting');
       }
-      if (
+      else if (
         response.value.Role === 'Admin' ||
         response.value.Role === 'Manager'
       ) {
@@ -75,8 +75,8 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Image
-          source={require('../../static/img/logo.jpeg')}
-          resizeMode="cover"
+          source={require('../../static/img/logo.png')}
+          resizeMode="contain"
           style={styles.image}
         />
       </View>
@@ -94,7 +94,7 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
             <TextInput.Icon
               icon={() => (
                 <MaterialCommunityIcons
-                  name="account"
+                  name="account-outline"
                   size={20}
                   color={color.secondaryColor}
                 />
@@ -115,7 +115,7 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
             <TextInput.Icon
               icon={() => (
                 <MaterialCommunityIcons
-                  name="key"
+                  name="key-outline"
                   size={20}
                   color={color.secondaryColor}
                 />
@@ -130,6 +130,11 @@ const LoginForm: React.FC<LoginProps> = ({ navigation }) => {
           Đăng nhập
         </Button>
       </View>
+      <Image
+        source={require('../../static/img/background-logo.png')}
+        resizeMode="contain"
+        style={styles.logoBottom}
+      />
     </View>
   );
 };
@@ -145,13 +150,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   image: {
-    width: '100%',
-    height: 150,
+    width: '60%',
+    height: 75,
     marginBottom: 3,
   },
   button: {
     ...buttonStyle.button,
     marginTop: 10,
+  },
+  logoBottom: {
+    width: 275,
+    height: 275,
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
   },
 });
 

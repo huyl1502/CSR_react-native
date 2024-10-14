@@ -9,30 +9,24 @@ const StorageStr = {
 const lstRatingIcon = [
   {
     point: 1,
-    code: 'emoticon-cry-outline',
-    label: 'Rất không hài lòng',
-    color: '#ff1744',
-  },
-  {
-    point: 2,
     code: 'emoticon-sad-outline',
     label: 'Không hài lòng',
     color: '#ff9100',
   },
   {
-    point: 3,
+    point: 2,
     code: 'emoticon-neutral-outline',
     label: 'Bình thường',
     color: '#f2b320',
   },
   {
-    point: 4,
+    point: 3,
     code: 'emoticon-happy-outline',
     label: 'Hài lòng',
     color: '#8bc34a',
   },
   {
-    point: 5,
+    point: 4,
     code: 'emoticon-excited-outline',
     label: 'Rất hài lòng',
     color: '#14a37f',
