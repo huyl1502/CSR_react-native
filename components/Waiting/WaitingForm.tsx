@@ -6,6 +6,8 @@ import { RootStackParamList } from '../../config/RouteConfig';
 import { callApi } from '../../utils/Api';
 import { ApiUrl, StorageStr } from '../../constants/Constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import WhiteLogo from '../../static/svg/whiteLogo.svg';
+import DoubleArrow from '../../static/svg/doubleArrow.svg';
 
 type WaitingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Waiting'>;
 interface WaitingProps {
@@ -34,11 +36,12 @@ const WaitingForm: React.FC<WaitingProps> = ({ navigation }) => {
           onPress={handlePress}
           activeOpacity={1} // Prevent color change on tap
         >
-          <Image
+          {/* <Image
             source={require('../../static/img/logo-top.png')}
             resizeMode="contain"
             style={styles.logoTop}
-          />
+          /> */}
+          <WhiteLogo style={styles.logoTop} />
           <Text variant="displaySmall" style={styles.text}>QUÝ KHÁCH VUI LÒNG CHO BIẾT</Text>
           <Text variant="displaySmall" style={styles.text}>MỨC ĐỘ HÀI LÒNG VỀ DỊCH VỤ CỦA CHÚNG TÔI</Text>
           {/* <MaterialCommunityIcons
@@ -46,11 +49,12 @@ const WaitingForm: React.FC<WaitingProps> = ({ navigation }) => {
             size={70}
             color={color.themeColor}
           /> */}
-          <Image
+          {/* <Image
             source={require('../../static/img/arrow.png')}
             resizeMode="contain"
             style={styles.image}
-          />
+          /> */}
+          <DoubleArrow style={styles.image} />
           <Image
             source={require('../../static/img/background-logo.png')}
             resizeMode="contain"
@@ -87,7 +91,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   logoTop: {
-    width: 75,
+    width: 100,
     height: 75,
     position: 'absolute',
     top: 0,
@@ -97,8 +101,8 @@ const styles = StyleSheet.create({
     width: 275,
     height: 275,
     position: 'absolute',
-    bottom: 20,
-    right: 20,
+    bottom: -35,
+    right: -25,
   },
 });
 

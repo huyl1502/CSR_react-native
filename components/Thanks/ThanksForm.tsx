@@ -4,6 +4,7 @@ import {color} from '../../constants/Styles';
 import {Text} from 'react-native-paper';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../config/RouteConfig';
+import WhiteLogo from '../../static/svg/whiteLogo.svg';
 
 type ThanksScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -26,11 +27,12 @@ const ThanksForm: React.FC<ThanksProps> = ({navigation}) => {
       source={require('../../static/img/background.png')}
       style={styles.backgroundImage}
       resizeMode="cover">
-      <Image
+      {/* <Image
         source={require('../../static/img/logo-top.png')}
         resizeMode="contain"
         style={styles.logoTop}
-      />
+      /> */}
+      <WhiteLogo style={styles.logoTop} />
       <View style={styles.container}>
         <Text variant="displaySmall" style={styles.text}>
           Trân trọng cảm ơn quý khách!
@@ -70,8 +72,8 @@ const styles = StyleSheet.create({
     width: 275,
     height: 275,
     position: 'absolute',
-    bottom: 20,
-    right: 20,
+    bottom: -35,
+    right: -25,
   },
 });
 

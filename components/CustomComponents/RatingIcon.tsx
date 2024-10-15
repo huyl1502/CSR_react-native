@@ -32,10 +32,7 @@ const RatingIcon: React.FC<RatingIconProps> = props => {
 
 const styles = StyleSheet.create({
   iconContainer: {
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 35,
+    zIndex: 2,
   },
   iconCheck: {
     position: 'absolute',

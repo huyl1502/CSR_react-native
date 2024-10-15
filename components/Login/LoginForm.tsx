@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {useState} from 'react';
-import {View, StyleSheet, Image, ToastAndroid} from 'react-native';
+import {View, StyleSheet, ToastAndroid, Image} from 'react-native';
 import {useLoading} from '../CustomComponents/LoadingContext';
 import {Text, TextInput, Button} from 'react-native-paper';
 import {
@@ -15,6 +15,7 @@ import {ApiUrl, StorageStr} from '../../constants/Constants';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../config/RouteConfig';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Logo from '../../static/svg/logo.svg';
 
 type LoginScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -73,12 +74,13 @@ const LoginForm: React.FC<LoginProps> = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Image
+      <View style={styles.logoContainer}>
+        {/* <Image
           source={require('../../static/img/logo.png')}
           resizeMode="contain"
           style={styles.image}
-        />
+        /> */}
+        <Logo style={styles.image} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={labelStyle}>Tài khoản</Text>
@@ -135,6 +137,7 @@ const LoginForm: React.FC<LoginProps> = ({navigation}) => {
         resizeMode="contain"
         style={styles.logoBottom}
       />
+      {/* <Flower style={styles.logoBottom} /> */}
     </View>
   );
 };
@@ -145,25 +148,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: color.themeColor,
   },
+  logoContainer: {
+    width: '60%',
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
   inputContainer: {
     width: '60%',
     alignSelf: 'center',
   },
   image: {
-    width: '60%',
-    height: 75,
-    marginBottom: 3,
+    width: 250,
+    height: 100,
   },
   button: {
     ...buttonStyle.button,
     marginTop: 10,
+    zIndex: 9999,
   },
   logoBottom: {
     width: 275,
     height: 275,
     position: 'absolute',
-    bottom: 20,
-    right: 20,
+    bottom: -35,
+    right: -25,
   },
 });
 

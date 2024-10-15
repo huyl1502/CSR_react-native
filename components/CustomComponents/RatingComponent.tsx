@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { lstRatingIcon } from '../../constants/Constants';
 import RatingIcon from './RatingIcon';
 import Criteria from '../../models/Criteria';
+import CardSvg from '../../static/svg/cardRotate.svg';
 
 interface RatingProps {
     criteria: Criteria;
@@ -14,6 +15,7 @@ const RatingComponent: React.FC<RatingProps> = (props) => {
 
     return (
         <View style={styles.iconContainer}>
+            <CardSvg style={styles.card} />
             {
                 lstRatingIcon.map((icon) => (
                     <RatingIcon
@@ -33,9 +35,18 @@ const RatingComponent: React.FC<RatingProps> = (props) => {
 const styles = StyleSheet.create({
     iconContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 0,
+        right: 50,
     },
+    card: {
+        width: 400,
+        height: 70,
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        zIndex: 1,
+      },
 });
 
 export default RatingComponent;
