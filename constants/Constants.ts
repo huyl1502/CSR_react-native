@@ -1,3 +1,4 @@
+
 const StorageStr = {
   Account: 'account',
   LoginInfo: 'loginInfo',
@@ -5,34 +6,6 @@ const StorageStr = {
   Criteria: 'criteria',
   Department: 'department',
 };
-
-const lstRatingIcon = [
-  {
-    point: 1,
-    code: 'emoticon-sad-outline',
-    label: 'Không hài lòng',
-    color: '#ff9100',
-  },
-  {
-    point: 2,
-    code: 'emoticon-neutral-outline',
-    label: 'Bình thường',
-    color: '#f2b320',
-  },
-  {
-    point: 3,
-    code: 'emoticon-happy-outline',
-    label: 'Hài lòng',
-    color: '#8bc34a',
-  },
-  {
-    point: 4,
-    code: 'emoticon-excited-outline',
-    label: 'Rất hài lòng',
-    color: '#14a37f',
-  },
-];
-
 interface ErrorCodeType {
   SESSION: string;
   DEP: string;
@@ -65,4 +38,4 @@ const ApiUrl = {
   Criteria: 'rating/criteria',
 };
 
-export {StorageStr, lstRatingIcon, ApiUrl, ErrorCode};
+export {StorageStr, ApiUrl, ErrorCode};

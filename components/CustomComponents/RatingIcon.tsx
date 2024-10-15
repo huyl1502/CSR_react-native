@@ -1,7 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import {TouchableOpacity, StyleSheet} from 'react-native';
 interface RatingIconProps {
   icon: any;
   isSelected: boolean;
@@ -10,38 +8,20 @@ interface RatingIconProps {
 
 const RatingIcon: React.FC<RatingIconProps> = props => {
   return (
-    <View style={styles.iconContainer}>
-      {props.isSelected && (
-        <MaterialCommunityIcons
-          name="check"
-          style={styles.iconCheck}
-          size={65}
-          color="#52b202"
-        />
+    <TouchableOpacity onPress={props.onSelect} activeOpacity={1} style={styles.iconContainer}>
+      {props.isSelected ? (
+        props.icon.selected
+      ) : (
+        props.icon.unselected
       )}
-      <MaterialCommunityIcons
-        name={props.icon.code}
-        style={props.isSelected ? styles.iconSelected : styles.icon}
-        size={65}
-        color={props.icon.color}
-        onPress={props.onSelect}
-      />
-    </View>
+    </TouchableOpacity >
   );
 };
 
 const styles = StyleSheet.create({
   iconContainer: {
     zIndex: 2,
-  },
-  iconCheck: {
-    position: 'absolute',
-  },
-  icon: {
-    opacity: 1,
-  },
-  iconSelected: {
-    opacity: 0.5,
+    marginRight: 17,
   },
 });
 

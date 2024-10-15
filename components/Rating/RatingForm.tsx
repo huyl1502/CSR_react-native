@@ -46,7 +46,7 @@ const RatingForm: React.FC<RatingProps> = ({navigation}) => {
       (await AsyncStorage.getItem(StorageStr.Criteria)) ?? '{}';
     let listCriteriaData = JSON.parse(listCriteriaJson).map((cri: any) => {
       return {...cri, point: undefined};
-    });
+    }).filter((cri: Criteria) => cri.code !== 'TC1');
     setListCriteria(listCriteriaData);
   };
 
@@ -108,7 +108,7 @@ const RatingForm: React.FC<RatingProps> = ({navigation}) => {
           {`Giao dịch viên: ${account._id} | ${account.Name}`}
         </Text>
         <View style={[styles.flexGrow]}>
-          {listCriteria.filter(cri => cri.code !== 'TC1').map((cri, index) => (
+          {listCriteria.map((cri, index) => (
             <View key={cri.code} style={styles.rowContainer}>
               <Text style={styles.label} variant="bodyLarge">
                 {`${index + 1}. ${cri.label}`}
@@ -149,11 +149,6 @@ const styles = StyleSheet.create({
   },
   flexGrow: {
     flexGrow: 1,
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   label: {
     color: color.primaryTextColor,

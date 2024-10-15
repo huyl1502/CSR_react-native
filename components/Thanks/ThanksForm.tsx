@@ -62,11 +62,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   logoTop: {
-    width: 75,
+    width: 100,
     height: 75,
     position: 'absolute',
     top: 0,
     left: 20,
+    zIndex: 1,
   },
   logoBottom: {
     width: 275,
